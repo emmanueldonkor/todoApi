@@ -16,10 +16,7 @@ public class TodoController {
     this.todoRepository = todoRepository;
   }
 
-  @PostMapping
-  public Todo createTodo(@RequestBody Todo todo){
-    return todoRepository.save(todo);
-  }
+
 
   @GetMapping
   public List<Todo> getAllTodos(){
@@ -30,6 +27,12 @@ public class TodoController {
   public ResponseEntity<Todo> getTodoById(@PathVariable Long id){
     Optional<Todo> todo = todoRepository.findById(id);
     return todo.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping
+  public ResponseEntity<Todo> createTodo(@RequestBody Todo newTodo) {
+    Todo createdTodo = todoRepository.save(newTodo);
+    return ResponseEntity.ok(createdTodo);
   }
 
   @PutMapping("/{id}")
@@ -44,7 +47,7 @@ public class TodoController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteTod(@PathVariable Long id){
+  public ResponseEntity<Void> deleteTodo(@PathVariable Long id){
     Optional<Todo> todo = todoRepository.findById(id);
     if(todo.isPresent()){
       todoRepository.delete(todo.get());
